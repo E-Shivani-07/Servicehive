@@ -19,6 +19,11 @@ if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);

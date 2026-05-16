@@ -4,11 +4,15 @@ import { connectDB } from './config/db';
 
 const startServer = async () => {
   try {
-    await connectDB();
-    
     const port = env.PORT;
     const server = app.listen(port, () => {
       console.log(`🚀 Server running in ${env.NODE_ENV} mode on port ${port}`);
+    });
+
+    // Connect to DB in the background (don't block server startup)
+    connectDB().catch((error) => {
+      console.error('⚠️  Failed to connect to MongoDB:', error.message);
+      console.log('📌 Server is still running. Health check endpoint available at /health');
     });
 
     server.on('error', (error: NodeJS.ErrnoException) => {
